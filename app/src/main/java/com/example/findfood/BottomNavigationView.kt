@@ -23,5 +23,11 @@ class BottomNavigationView : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+//        if (savedInstanceState == null) {
+//            val transaction = supportFragmentManager.beginTransaction()
+//            transaction.add(R.id.detailContainer, HomeFragment.createInstance(this))
+//            transaction.commit()
+//        }
     }
 }
