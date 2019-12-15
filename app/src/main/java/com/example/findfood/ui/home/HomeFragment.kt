@@ -27,6 +27,8 @@ class HomeFragment : Fragment() {
 
     var mContext: Context? = null
     val Retrofit = RetrofitInstance()
+    val homeAllList = mutableListOf<HomeViewModel>()
+    val homeTopicList = mutableListOf<HomeTopicModel>()
 
     //謎
     companion object {
@@ -81,8 +83,7 @@ class HomeFragment : Fragment() {
 
     val coroutineScope = CoroutineScope(context = Dispatchers.Main)
     fun searchGitHubRepositoryByCoroutines() {
-        val dataList = mutableListOf<HomeViewModel>()
-        Log.d("テスト1", dataList.toString())
+        Log.d("テスト1", homeAllList.toString())
         coroutineScope.launch {
             try {
                 val qiitaRepositoriesData = qiitRepositoriesByCoroutines(
@@ -106,18 +107,23 @@ class HomeFragment : Fragment() {
 //                                        .into(it.shopImage)
 //                                }
                             }
-                        dataList.add(data)
-                        Log.d("テスト2", dataList.toString())
+                        val topicData: HomeTopicModel = HomeTopicModel()
+                            .also {
+                                it.name = item?.name
+                                it.lunch = item?.lunch
+                            }
+                        homeAllList.add(data)
+                        homeTopicList.add(topicData)
                     }
                     //更新
-                    controller.list = dataList
+                    controller.list = homeAllList
+                    controller.categoryList = homeTopicList
                 }
             } catch (e: HttpException) {
-                Log.d("TAGres", "onFailure")
                 // リクエスト失敗時の処理を行う
             }
         }
-        Log.d("テスト3", dataList.toString())
+        Log.d("テスト3", homeAllList.toString())
     }
 
 }
