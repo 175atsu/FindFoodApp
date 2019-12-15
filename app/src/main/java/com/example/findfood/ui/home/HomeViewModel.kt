@@ -13,12 +13,3 @@ class HomeViewModel: ViewModel() {
     var address: String? = null
     var lunch: String? = null
 }
-
-//data class HomeViewModel (
-//    var id: String? = null,
-//    var name: String? = null,
-//    var url: String? = null,
-//    var shopImage: ImageView? = null,
-//    var address: String? = null,
-//    var lunch: String? = null
-//)
