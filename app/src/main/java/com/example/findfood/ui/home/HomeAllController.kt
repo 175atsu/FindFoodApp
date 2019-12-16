@@ -6,7 +6,13 @@ import com.airbnb.epoxy.EpoxyController
 import com.example.findfood.ListAllBindingModel_
 import com.example.findfood.ListTopicBindingModel_
 
-class HomeAllController : EpoxyController() {
+class HomeAllController(val callback: ClickListener) : EpoxyController() {
+
+
+    interface ClickListener {
+        fun itemClickListener(item: HomeViewModel)
+    }
+
     //リストの設定
     var list: List<HomeViewModel> = emptyList()
         set(vlaue) {
@@ -43,6 +49,9 @@ class HomeAllController : EpoxyController() {
             ListAllBindingModel_()
                 .id(modelCountBuiltSoFar)
                 .listAllModel(list)
+                .itemClickListener { _, _, _, _ ->
+                    callback.itemClickListener(list)
+                }
                 .addTo(this)
         }
     }

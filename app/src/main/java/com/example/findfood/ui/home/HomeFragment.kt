@@ -1,11 +1,15 @@
 package com.example.findfood.ui.home
 
+//import com.example.findfood.db.FoodResponse
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -13,15 +17,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.findfood.R
 import com.example.findfood.RetrofitInstance
-//import com.example.findfood.db.FoodResponse
 import com.example.findfood.db.Shop
+import com.example.findfood.ui.WebViewFragment
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(),HomeAllController.ClickListener {
 
     private lateinit var homeViewModel: HomeViewModel
 
@@ -40,7 +44,7 @@ class HomeFragment : Fragment() {
     }
 
     private val controller by lazy {
-        HomeAllController()
+        HomeAllController(this)
     }
 
 
@@ -70,15 +74,23 @@ class HomeFragment : Fragment() {
         getData()
     }
 
+    override fun itemClickListener(item: HomeViewModel) =
+        CustomTabsIntent.Builder()
+            .setShowTitle(true)
+            .setToolbarColor(ContextCompat.getColor(this.activity!!, R.color.title))
+            .build().launchUrl(this.activity, Uri.parse(item.url))
+
     private fun getData() = searchGitHubRepositoryByCoroutines()
 
     //coroutine利用
     suspend fun qiitRepositoriesByCoroutines(
         key: String,
         largeArea: String,
+        count: Int,
         format: String
     ): List<Shop> {
-        return Retrofit.createService().apiDemo(key = key, largeArea = largeArea, format = format).results.shop
+        return Retrofit.createService().apiDemo(key = key, largeArea = largeArea, count = count, format = format)
+            .results.shop
     }
 
     val coroutineScope = CoroutineScope(context = Dispatchers.Main)
@@ -89,15 +101,17 @@ class HomeFragment : Fragment() {
                 val qiitaRepositoriesData = qiitRepositoriesByCoroutines(
                     key = "eafd5fb1321096c8",
                     largeArea = "Z011",
+                    count = 50,
                     format = "json"
                 )
                 qiitaRepositoriesData.let {
                     for (item in it) {
                         val data: HomeViewModel = HomeViewModel()
                             .also {
-                                //item.shop?.add(Shop(name = it.name, id = null, lunch = it.lunch))
                                 it.name = item?.name
                                 it.lunch = item?.lunch
+                                it.url = item?.urls?.pc
+                                Log.d("テスト", it.url.toString())
 //                                if (item.shop.log_image != null) {
 //                                    Glide.with(HomeFragment())
 //                                        .load(item.shop.log_image)
@@ -114,6 +128,7 @@ class HomeFragment : Fragment() {
                             }
                         homeAllList.add(data)
                         homeTopicList.add(topicData)
+                        Log.d("テスト", data.toString())
                     }
                     //更新
                     controller.list = homeAllList
@@ -124,6 +139,21 @@ class HomeFragment : Fragment() {
             }
         }
         Log.d("テスト3", homeAllList.toString())
+    }
+
+
+    //詳細ページへの遷移
+    fun toDetail(urlData: HomeViewModel) {
+        val fragment = WebViewFragment()
+        val bundle = Bundle().apply {
+            putString("URL", urlData.url)
+        }
+        fragment.setArguments(bundle)
+        // FragmentをFragmentManagerにセットする
+        getFragmentManager()!!.beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.detailContainer, fragment)
+            .commit()
     }
 
 }
