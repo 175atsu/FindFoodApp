@@ -11,6 +11,7 @@ interface ApiService {
     suspend fun apiDemo(
         @Query("key") key: String,
         @Query("large_area") largeArea: String,
+        @Query("count") count: Int,
         @Query("format") format: String
     ): FoodResponse
 }

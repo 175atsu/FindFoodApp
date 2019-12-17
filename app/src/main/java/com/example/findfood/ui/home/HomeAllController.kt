@@ -3,10 +3,21 @@ package com.example.findfood.ui.home
 import com.airbnb.epoxy.Carousel
 import com.airbnb.epoxy.CarouselModel_
 import com.airbnb.epoxy.EpoxyController
+import com.airbnb.epoxy.carousel
 import com.example.findfood.ListAllBindingModel_
 import com.example.findfood.ListTopicBindingModel_
 
-class HomeAllController : EpoxyController() {
+class HomeAllController(val callback: ClickListener) : EpoxyController() {
+
+
+    interface ClickListener {
+        fun itemClickListener(item: HomeViewModel)
+    }
+
+    interface CarouselListener {
+        fun itemClickListener(item: HomeTopicModel)
+    }
+
     //リストの設定
     var list: List<HomeViewModel> = emptyList()
         set(vlaue) {
@@ -33,6 +44,9 @@ class HomeAllController : EpoxyController() {
                     categoryList.map {
                         ListTopicBindingModel_()
                             .id(it.id)
+//                            .itemClickListener { _, _, _, _ ->
+//                                callback.itemClickListener()
+//                            }
                     }
                 )
                 .addTo(this)
@@ -43,6 +57,9 @@ class HomeAllController : EpoxyController() {
             ListAllBindingModel_()
                 .id(modelCountBuiltSoFar)
                 .listAllModel(list)
+                .itemClickListener { _, _, _, _ ->
+                    callback.itemClickListener(list)
+                }
                 .addTo(this)
         }
     }

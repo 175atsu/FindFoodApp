@@ -7,6 +7,10 @@
         <variable
             name="listAllModel"
             type="com.example.findfood.ui.home.HomeViewModel" />
+
+        <variable
+            name="itemClickListener"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <LinearLayout
@@ -20,7 +24,8 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_margin="5dp"
-            android:background="#f0e68c">
+            android:background="#ffcc80"
+            android:onClick="@{itemClickListener}">
 
             <ImageView
                 android:id="@+id/imageView"
@@ -47,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="@{listAllModel.lunch}" />
+                    android:text='@{@string/lunch + listAllModel.lunch}'/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
