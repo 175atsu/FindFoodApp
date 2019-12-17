@@ -11,7 +11,7 @@ data class Result(
 data class Shop(
     val id: String?,
     val name: String?,
-    val log_image: String?,
+    val logo_image: String?,
     val address: String?,
     val lat: Float?,
     val lng: Float?,

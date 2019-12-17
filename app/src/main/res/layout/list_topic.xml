@@ -7,13 +7,18 @@
         <variable
             name="listTopicModel"
             type="com.example.findfood.ui.home.HomeViewModel" />
+
+        <variable
+            name="carouselItemClickListener"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#ffc947">
+        android:background="#ffc947"
+        android:onClick="@{carouselItemClickListener}">
 
         <ImageView
             android:id="@+id/imageView2"

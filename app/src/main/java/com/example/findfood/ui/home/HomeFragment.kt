@@ -1,6 +1,5 @@
 package com.example.findfood.ui.home
 
-//import com.example.findfood.db.FoodResponse
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -15,6 +14,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.findfood.R
 import com.example.findfood.RetrofitInstance
 import com.example.findfood.db.Shop
@@ -83,7 +85,7 @@ class HomeFragment : Fragment(),HomeAllController.ClickListener {
     private fun getData() = searchGitHubRepositoryByCoroutines()
 
     //coroutine利用
-    suspend fun qiitRepositoriesByCoroutines(
+    suspend fun foodAllRepositoriesByCoroutines(
         key: String,
         largeArea: String,
         count: Int,
@@ -98,37 +100,39 @@ class HomeFragment : Fragment(),HomeAllController.ClickListener {
         Log.d("テスト1", homeAllList.toString())
         coroutineScope.launch {
             try {
-                val qiitaRepositoriesData = qiitRepositoriesByCoroutines(
+                val foodAllRepositoriesData = foodAllRepositoriesByCoroutines(
                     key = "eafd5fb1321096c8",
                     largeArea = "Z011",
                     count = 50,
                     format = "json"
                 )
-                qiitaRepositoriesData.let {
+                foodAllRepositoriesData.let {
                     for (item in it) {
                         val data: HomeViewModel = HomeViewModel()
                             .also {
                                 it.name = item?.name
                                 it.lunch = item?.lunch
                                 it.url = item?.urls?.pc
-                                Log.d("テスト", it.url.toString())
-//                                if (item.shop.log_image != null) {
-//                                    Glide.with(HomeFragment())
-//                                        .load(item.shop.log_image)
-//                                        .error(android.R.drawable.btn_star_big_on)
-//                                        .apply(RequestOptions.bitmapTransform(RoundedCorners(30)))
-//                                        .override(300, 300)
-//                                        .into(it.shopImage)
-//                                }
+                                Log.d("テスト4", item.logo_image.toString())
+                                val image = it.shopImage
+                                if (image != null) {
+                                    Glide.with(HomeFragment())
+                                        .load(item.logo_image)
+                                        .error(android.R.drawable.btn_star_big_on)
+                                        .apply(RequestOptions.bitmapTransform(RoundedCorners(30)))
+                                        .override(300, 300)
+                                        .into(image)
+                                }
+                                Log.d("テスト2", image.toString())
                             }
                         val topicData: HomeTopicModel = HomeTopicModel()
                             .also {
                                 it.name = item?.name
                                 it.lunch = item?.lunch
+                                it.url = item?.urls?.pc
                             }
                         homeAllList.add(data)
                         homeTopicList.add(topicData)
-                        Log.d("テスト", data.toString())
                     }
                     //更新
                     controller.list = homeAllList
