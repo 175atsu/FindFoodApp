@@ -21,13 +21,15 @@ import com.example.findfood.R
 import com.example.findfood.RetrofitInstance
 import com.example.findfood.db.Shop
 import com.example.findfood.ui.WebViewFragment
+import com.example.findfood.ui.dashboard.DashboardFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class HomeFragment : Fragment(),HomeAllController.ClickListener {
+class HomeFragment : Fragment(), HomeAllController.ClickListener {
 
     private lateinit var homeViewModel: HomeViewModel
 
@@ -74,6 +76,18 @@ class HomeFragment : Fragment(),HomeAllController.ClickListener {
             )
         }
         getData()
+//        fab.setOnClickListener {
+//            val fragment = DashboardFragment()
+//            val bundle = Bundle().apply {
+//                //putString("URL", urlData.url)
+//            }
+//            fragment.setArguments(bundle)
+//            // FragmentをFragmentManagerにセットする
+//            getFragmentManager()!!.beginTransaction()
+//                .addToBackStack(null)
+//                .replace(R.id.detailContainer, fragment)
+//                .commit()
+//        }
     }
 
     override fun itemClickListener(item: HomeViewModel) =
@@ -91,7 +105,8 @@ class HomeFragment : Fragment(),HomeAllController.ClickListener {
         count: Int,
         format: String
     ): List<Shop> {
-        return Retrofit.createService().apiDemo(key = key, largeArea = largeArea, count = count, format = format)
+        return Retrofit.createService()
+            .apiDemo(key = key, largeArea = largeArea, count = count, format = format)
             .results.shop
     }
 
