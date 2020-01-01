@@ -15,20 +15,19 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         val navController = findNavController(R.id.nav_host_fragment)
 
-//        val appBarConfiguration = AppBarConfiguration(
-//            setOf(
-//                R.id.navigation_home, R.id.navigation_notifications
-//            )
-//        )
-//        setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
         fab.setOnClickListener {
             val fragment = DashboardFragment()
-            val bundle = Bundle().apply {
-                //putString("URL", urlData.url)
-            }
-            fragment.setArguments(bundle)
+//            val bundle = Bundle().apply {
+//                //putString("URL", urlData.url)
+//            }
+//            fragment.setArguments(bundle)
+
+            //navigateでactionの指定ぽい
+            //navController.navigate(R.id.nav_host_fragment)
+
+
             supportFragmentManager
                 .beginTransaction()
                 .addToBackStack(null)
